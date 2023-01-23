@@ -32,10 +32,6 @@ python scout_play.py
 >options:
 >  -h, --help            show this help message and exit
 >  -v, --version         Show version of this game and exit.
->  -d, --debug           Show debug log.
->  -p PLAYER, --player PLAYER
->                        Specify number of players.
->  -c CPU, --cpu CPU     Specify the number of CPUs.
  
 # Author.
  
