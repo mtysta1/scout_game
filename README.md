@@ -22,7 +22,7 @@ Run scout_play.py.
 
  
 ```bash
-python demo.py
+python scout_play.py
 ```
 
 >usage: scout_play.py [-h] [-v] [-d] [-p PLAYER] [-c CPU]
