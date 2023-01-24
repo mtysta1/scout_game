@@ -454,9 +454,55 @@ class PlayerCPU(PlayerHuman):
         card_numbers_bottom = []
         for card in self.cards :
             top_sum += card.top_number
-            card_numbers_top.append(card.top_number)
             bottom_sum += card.bottom_number
-            card_numbers_bottom.append(card.bottom_number)
+        if top_sum >= bottom_sum :
+            pass
+        else :
+            for card in self.cards :
+                tmp = card.top_number
+                card.top_number = card.bottom_number
+                card.bottom_number = tmp
+
+
+    def selectAboveOrBelow_test(self) :
+        '''カードの上下を選択（検証用）'''
+
+        top_sum = 0
+        card_numbers_top = []
+        bottom_sum = 0
+        card_numbers_bottom = []
+        for card in self.cards :
+            top = card.top_number
+            bottom = card.bottom_number
+            if not self.cards.index(card) == 0 :
+                # 前
+                pre_card = self.cards[self.cards.index(card)-1]
+                # 同数だったら2倍
+                if pre_card.top_number == card.top_number :
+                    top = top*2
+                if pre_card.bottom_number == card.bottom_number :
+                    bottom = bottom*2
+                # 階段だったら1.5倍
+                if pre_card.top_number + 1 == card.top_number or pre_card.top_number - 1 == card.top_number :
+                    top = top*1.5
+                if pre_card.bottom_number + 1 == card.bottom_number or pre_card.bottom_number - 1 == card.bottom_number:
+                    bottom = bottom*1.5
+            if not self.cards.index(card) == len(self.cards)-1 :
+                # 後
+                post_card = self.cards[self.cards.index(card)+1]
+                # 同数だったら2倍
+                if post_card.top_number == card.top_number :
+                    top = top*2
+                if post_card.bottom_number == card.bottom_number :
+                    bottom = bottom*2
+                # 階段だったら1.5倍
+                if post_card.top_number + 1 == card.top_number or post_card.top_number - 1 == card.top_number :
+                    top = top*1.5
+                if post_card.bottom_number + 1 == card.bottom_number or post_card.bottom_number - 1 == card.bottom_number:
+                    bottom = bottom*1.5
+            top_sum += top
+            bottom_sum += bottom
+
         if top_sum >= bottom_sum :
             pass
         else :

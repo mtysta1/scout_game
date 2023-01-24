@@ -23,9 +23,7 @@ class main():
 
         # 変数生成
         self.round_count = 0
-
-        # ゲームを開始する
-        self.main_processing()
+        self.drow = False
 
     def main_processing(self):
         '''メイン処理'''
@@ -50,7 +48,7 @@ class main():
         if not self.args.player :
             self.num_players = self.ui.getNumberOfPlayers()
         else :
-            self.num_players = args.player
+            self.num_players = self.args.player
         self.ui.showMessage(str(self.num_players)+"人でプレイします")
 
         #CPU人数の設定
@@ -111,6 +109,9 @@ class main():
         player_index = first_player_index
 
         # ゲームのループ開始
+        # 無限ループ防止用の手番数
+        count = 0
+        self.drow = False
         while True :
 
             # 次のplayerのindexを予め設定する
@@ -152,6 +153,12 @@ class main():
 
             # 順番を回す
             player_index = next_player_index
+
+            # 無限ループ防止
+            count += 1
+            if count > 100 :
+                drow = True
+                break
 
     def newCards(self):
         '''トランプのカードを作成する'''
@@ -276,15 +283,18 @@ class main():
         '''ラウンド結果を表示する'''
 
         # 点数計算
-        for player in self.players :
-            point = player.scoutpoint + player.showpoint
-            if not player.win :
-                point -= len(player.cards)
-            player.totalpoint += point
-            player.point.append(point)
+        if not self.drow :
+            for player in self.players :
+                point = player.scoutpoint + player.showpoint
+                if not player.win :
+                    point -= len(player.cards)
+                player.totalpoint += point
+                player.point.append(point)
+        else :
+            for player in self.players :
+                player.totalpoint = 0
 
         self.ui.showRoundResult(sorted(self.players, key=lambda x:(x.totalpoint),reverse=True),self.round_count)
-
 
 if __name__ == "__main__":
     # パーサを作成
@@ -296,4 +306,4 @@ if __name__ == "__main__":
     parser.add_argument('-c', '--cpu', type=int, help='Specify the number of CPUs.')
     # 引数を解析
     args = parser.parse_args()
-    main(args)
+    main(args).main_processing()
