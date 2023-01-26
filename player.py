@@ -463,9 +463,31 @@ class PlayerCPU(PlayerHuman):
                 card.top_number = card.bottom_number
                 card.bottom_number = tmp
 
+# 以下はロジック検証用
+
+    def playersAction_test(self, field):
+        '''アクション'''
+
+        # とりあえずショー
+        show = self.show(field)
+        if show :
+            return "show"
+
+        # ランダムでスカウト&ショー
+        if self.scout_and_show_chip :
+            if random.random() >= 0.8:
+                self.ui.showMessage("スカウト&ショー！")
+                self.scout(field)
+                self.show(field)
+                self.scout_and_show_chip = False
+                return "scout&show"
+
+        #できなければスカウト
+        self.scout(field)
+        return "scout"
 
     def selectAboveOrBelow_test(self) :
-        '''カードの上下を選択（検証用）'''
+        '''カードの上下を選択（ロジック検証用）'''
 
         top_sum = 0
         card_numbers_top = []

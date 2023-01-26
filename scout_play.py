@@ -98,7 +98,8 @@ class main():
         self.dealCards()
 
         # カードの上下を選択する
-        self.selectAboveOrBelow()
+        for player in self.players :
+            self.selectAboveOrBelow(player)
 
         # 選択後の手札を表示
         if self.args.debug :
@@ -157,7 +158,7 @@ class main():
             # 無限ループ防止
             count += 1
             if count > 100 :
-                drow = True
+                self.drow = True
                 break
 
     def newCards(self):
@@ -252,11 +253,10 @@ class main():
                 else :
                     pass
 
-    def selectAboveOrBelow(self):
+    def selectAboveOrBelow(self, player):
         '''カードの上下を選択する'''
 
-        for player in self.players :
-            player.selectAboveOrBelow()
+        player.selectAboveOrBelow()
 
     def showPlayersCards(self, player):
         '''プレイヤーカードを表示する'''

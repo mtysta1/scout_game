@@ -18,7 +18,7 @@ __doc__ = 'スカウトゲーム（CPUシミュレーション版）'
 class cpu_simulation(main):
 
     def __init__(self, args, statistics):
-        #継承
+        #s スカウトゲームのメインを継承
         super().__init__(args)
 
         self.statistics = statistics
@@ -51,20 +51,40 @@ class cpu_simulation(main):
     def showResult(self):
         '''最終結果を表示する'''
 
-        # 統計に合計点を追加
+        # 統計に合計点と無効試合の数を追加
         self.statistics.sum(self.players)
+        if self.drow :
+            self.statistics.drow_num += 1
 
-    def selectAboveOrBelow(self):
+    def selectAboveOrBelow(self, player):
         '''カードの上下を選択する'''
+        # ロジック検証箇所
 
-        for player in self.players :
-            if player.id == 0 :
-                print(player.name+"test")
-                player.selectAboveOrBelow_test()
-            else :
-                player.selectAboveOrBelow()
+        if player.id == 0 :
+            # ロジック検証用関数
+            player.selectAboveOrBelow_test()
+        else :
+            # 通常ロジック関数
+            player.selectAboveOrBelow()
+
+    def playersAction(self, player):
+        '''各プレイヤーのアクション'''
+        # ロジック検証箇所
+
+        if player.id == 0 :
+            # ロジック検証用関数
+            action = player.playersAction_test(self.field)
+        else :
+            # 通常ロジック関数
+            action = player.playersAction(self.field)
+
+        if action == "scout" :
+            self.scoutcount += 1
+        else :
+            self.scoutcount = 0
 
 class NoUI(UI) :
+    '''UIを抑制するためのクラス'''
 
     def showMessage(self, message, end='\n') :
         '''メッセージ出力'''
@@ -72,9 +92,11 @@ class NoUI(UI) :
         return
 
 class Statistics():
+    '''統計用のクラス'''
 
     def __init__(self):
         self.sum_point = {}
+        self.drow_num = 0
 
     def sum(self, players):
         for player in players :
@@ -103,4 +125,5 @@ if __name__ == "__main__":
 
     for key in statistics.sum_point :
         print(key+" Total:"+str(statistics.sum_point[key])+"点, average:"+str(statistics.sum_point[key]/args.games))
+    print("無効試合:"+str(statistics.drow_num))
 
